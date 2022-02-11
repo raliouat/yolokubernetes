@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: yolo-svc
+spec:
+  ports:
+  - nodePort: 32602
+    port: 80
+    protocol: TCP
+    targetPort: 80
+  selector:
+    app: yolo-kubernetes
+  type: NodePort
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: yolo-kubernetes
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: yolo-kubernetes
+  template:
+    metadata:
+      labels:
+        app: yolo-kubernetes
+    spec:
+      containers:
+      - name: yolo-kubernetes
+        image: mcr.microsoft.com/ava-utilities/avaextension:http-yolov3-onnx-v1.0
+        ports:
+        - containerPort: 80
